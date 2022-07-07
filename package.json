@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/SantiagoEnzo/santimusica/issues"
   },
-  "homepage": "https://github.com/SantiagoEnzo/santimusica#readme"
+  "homepage": "https://github.com/SantiagoEnzo/santimusica#readme",
+  "dependencies": {
+    "config": "^3.3.7",
+    "execa": "^5.1.1",
+    "express": "^4.18.1",
+    "loudness": "^0.4.1",
+    "nodemon": "^2.0.19"
+  }
 }
