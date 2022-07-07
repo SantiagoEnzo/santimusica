@@ -7,7 +7,7 @@ const config = require("config");
 let volBajo = config.has('volBajo') ? config.get('volBajo') : 10;
 let volAlto = config.has('volAlto') ? config.get('volAlto') : 45;
 let mensajeBajar = config.has('mensajeBajar') ? config.get('mensajeBajar') : 'Bajando';
-let mensajeSubir = config.has('mensajeSubir') ? config.get('volAlto') : "Subiendoo";
+let mensajeSubir = config.has('mensajeSubir') ? config.get('mensajeSubir') : "Subiendoo";
 let port = config.has('port') ? config.get('port') : 2592;
 
 //metodos
