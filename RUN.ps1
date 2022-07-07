@@ -1,1 +1,1 @@
-nodemon santimusica.js  -wait
+nodemon santimusica.js
