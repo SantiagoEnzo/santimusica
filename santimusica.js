@@ -1,52 +1,66 @@
+console.time('init')//
 const loudness = require('loudness');
+const setVolume = loudness.setVolume;
+const getVolume = loudness.getVolume;
 const express = require('express');
 const app = express();
 const config = require("config");
 var requests = 1;//
 var bajar = false;
+
 //import configs
-let volBajo = config.has('volBajo') ? config.get('volBajo') : 10;
-let volAlto = config.has('volAlto') ? config.get('volAlto') : 45;
-let mensajeBajar = config.has('mensajeBajar') ? config.get('mensajeBajar') : 'Bajando';
-let mensajeSubir = config.has('mensajeSubir') ? config.get('mensajeSubir') : "Subiendoo";
-let port = config.has('port') ? config.get('port') : 2592;
+const volBajo = config.has('volBajo') ? config.get('volBajo') : 10;
+const volAlto = config.has('volAlto') ? config.get('volAlto') : 45;
+const mensajeBajar = config.has('mensajeBajar') ? config.get('mensajeBajar') : 'Bajando';
+const mensajeSubir = config.has('mensajeSubir') ? config.get('mensajeSubir') : "Subiendoo";
+const port = config.has('port') ? config.get('port') : 2592;
+
 //funciones
-logmemoria =()=>{
+
+const logmemoria = () =>{
 	let used = process.memoryUsage().heapTotal / 1024 / 1024;
 console.log(`Usando unos ${Math.round(used * 100) / 100} MB Requests:`+requests);
 }
+
 //metodos
+
 app.get('/bajar', async function (req, res) {
   bajar = true;
   let ip = req.socket.remoteAddress;
-  await loudness.setVolume(volBajo);
+  await setVolume(volBajo);
   res.send(mensajeBajar);
   console.log(ip + ' bajo');
-  logmemoria();//
-  requests++;//
-  bajar = false;
+  //logmemoria();//
+  //requests++;//
+  //bajar = false;
 })
 
 app.get('/subir', async function (req, res) {
+  bajar = false;
   console.time('subir')//
   let ip = req.socket.remoteAddress;
-  let vol = await loudness.getVolume()
-  while (vol < volAlto){  
-    await loudness.setVolume(vol+1);
-	if (bajar){break}
-	vol = await loudness.getVolume();
+  console.log(req.socket.ip)
+  console.log(ip + ' subio');
+  let vol = await getVolume()
+  while (vol < volAlto){
+    vol++;
+	await setVolume(vol)
+    //await setVolume(vol);
+	if (bajar){
+		console.log('Subir abortado');
+		break;
+	}
   }
   res.send(mensajeSubir);
-  console.log(ip + ' subio');
-  logmemoria();//
-   requests++;//
+  //logmemoria();//
+   //requests++;//
    console.timeEnd('subir')//
 })
 
 app.get('/volumen', async function (req, res) {	
   let vol = await loudness.getVolume()
   res.send('Volumen actual: '+ vol);
-  requests++;//
+  //requests++;//
 })
 
 
@@ -54,4 +68,6 @@ app.get('/volumen', async function (req, res) {
 app.listen(port);
 console.log('Servidor escuchando en puerto: ' + port);
 
-//memoria
+// init time
+// ~110ms
+console.timeEnd('init')//
